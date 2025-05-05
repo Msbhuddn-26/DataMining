@@ -5,8 +5,7 @@ Proyek ini merupakan implementasi pemrosesan data hasil scanning keamanan jaring
 
 Struktur dan Penjelasan Kode
 1. Import Library
-```
-python
+python ```
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -22,8 +21,7 @@ matplotlib dan seaborn untuk visualisasi,
 scikit-learn untuk machine learning dan evaluasi model.
 
 2. Membaca Data CSV
-```
-python
+python ```
 data1 = pd.read_csv('Recon OS Scan.csv')
 data2 = pd.read_csv('Recon Port Scan.csv')
 data3 = pd.read_csv('Recon Vulnerability Scan.csv')
@@ -31,22 +29,19 @@ data3 = pd.read_csv('Recon Vulnerability Scan.csv')
 Tiga file CSV dibaca yang berisi hasil pemindaian OS, pemindaian port, dan pemindaian kerentanan.
 
 3. Preprocessing Data
-```
-python
+python ```
 dtRevisi = data2.iloc[:159025, :]
 ```
 Data dari pemindaian port (data2) direduksi hingga 159.025 baris pertama untuk menjaga keselarasan dengan dataset lainnya.
 
 4. Penggabungan DataFrame
-```
-python
+python ```
 DataJoin = pd.concat([data1, dtRevisi, data3], ignore_index=True)
 ```
 Semua dataset digabung secara vertikal menjadi satu DataFrame (DataJoin). Penggunaan ignore_index=True mengatur ulang indeks baris agar tetap unik dan berurutan.
 
 5. Pemisahan Fitur dan Label
-```
-python
+python ```
 x = DataJoin.iloc[:, 7:76]
 y = DataJoin.iloc[:, 83:84]
 ```
@@ -54,8 +49,7 @@ Fitur (x) diambil dari kolom ke-7 hingga 75.
 Label (y) diambil dari kolom ke-83. Pemilihan kolom ini mengasumsikan data label berada di kolom tersebut.
 
 6. Penanganan Missing Values dan Pembagian Data
-```
-python
+python ```
 x = x.fillna(method='ffill')
 y = y.fillna(method='ffill')
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.3, random_state = 42)
@@ -64,8 +58,7 @@ Mengisi nilai yang hilang dengan metode forward-fill.
 Membagi data menjadi 70% data latih dan 30% data uji.
 
 7. Pelatihan Model Decision Tree
-```
-python
+python ```
 uji = DecisionTreeClassifier(criterion='entropy', splitter='random')
 uji.fit(x_train, y_train)
 y_pred = uji.predict(x_test)
@@ -74,15 +67,14 @@ Model pohon keputusan dibangun dengan kriteria entropy dan splitter='random'.
 Model dilatih dengan data latih dan menghasilkan prediksi pada data uji.
 
 8. Evaluasi Akurasi Model
-```
-python
+
+python ```
 accuracy = accuracy_score(y_test, y_pred)
 ```
 Evaluasi menggunakan metrik akurasi antara label aktual dan prediksi.
 
 9. Visualisasi Model Decision Tree
-```
-python
+python ```
 fig = plt.figure(figsize=(10, 7))
 tree.plot_tree(uji, feature_names=x.columns.values, class_names=np.array(['Recon OS Scan', 'Recon Port Scan', 'Recon Vulnerability Scan']), filled=True)
 plt.show()
@@ -90,8 +82,7 @@ plt.show()
 Visualisasi struktur pohon keputusan secara grafis dengan fitur dan nama kelas yang sesuai.
 
 10. Confusion Matrix
-```
-python
+python ```
 conf_matrix = metrics.confusion_matrix(y_test, y_pred)
 plt.figure(figsize=(10, 10))
 sea.heatmap(conf_matrix, annot=True, xticklabels=label, yticklabels=label)
